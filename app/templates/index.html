@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>House Price Predictor</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+</head>
+<body>
+    <h2>Enter House Details</h2>
+    <form action="/predict" method="post">
+        <label>Location:</label>
+        <select id="location" name="location" required>
+            <option value="">Select Location</option>
+        </select>
+        <br><br>
+
+        <label>BHK:</label>
+        <input type="number" name="bhk" required><br><br>
+
+        <label>Bath:</label>
+        <input type="number" name="bath" required><br><br>
+
+        <label>Square Feet:</label>
+        <input type="number" name="sqft" required><br><br>
+
+        <button type="submit">Predict Price</button>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            $('#location').select2({
+                placeholder: "Search for a location",
+                ajax: {
+                    url: "/get_locations",
+                    dataType: "json",
+                    processResults: function(data) {
+                        return { results: data.map(loc => ({ id: loc, text: loc })) };
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
