@@ -23,6 +23,7 @@ This project provides a web interface and API for real estate price predictions.
 2. Create virtual environment
    ```
    python -m venv .venv
+   ./.venv/Scripts/activate
    ```
 3. Install required dependencies:
    ```
