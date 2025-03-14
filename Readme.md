@@ -20,13 +20,16 @@ This project provides a web interface and API for real estate price predictions.
    git clone https://github.com/bhushanzade02/HOUSE-PRICE-DS.git
    cd HOUSE-PRICE-DS
    ```
-
-2. Install required dependencies:
+2. Create virtual environment
+   ```
+   python -m venv .venv
+   ```
+3. Install required dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-3. Start the server:
+4. Start the server:
    ```
    python server/server.py
    ```
