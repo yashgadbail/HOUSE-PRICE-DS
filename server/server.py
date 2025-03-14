@@ -1,7 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import util
+import os
 
-app = Flask(__name__)
+template_dir = os.path.abspath('./templates')
+static_dir = os.path.abspath('./static')
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+
+@app.route('/', methods=['GET'])
+def home():
+    return render_template('index.html')
 
 @app.route('/get_location_names', methods=['GET'])
 def get_location_names():
