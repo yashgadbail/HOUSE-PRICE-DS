@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Home Price Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Register</h2>
+                        {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                        {% endif %}
+                        <form method="POST" action="{{ url_for('register') }}" id="registerForm" novalidate>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       required pattern="^[a-zA-Z0-9_]{3,20}$">
+                                <div class="invalid-feedback">
+                                    Username must be 3-20 characters long and can only contain letters, numbers, and underscores.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">
+                                    Please enter a valid email address.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" 
+                                           required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="password-requirements small text-muted mt-1">
+                                    Password must contain:
+                                    <ul class="mb-0">
+                                        <li id="length">At least 8 characters</li>
+                                        <li id="uppercase">At least one uppercase letter</li>
+                                        <li id="lowercase">At least one lowercase letter</li>
+                                        <li id="number">At least one number</li>
+                                        <li id="special">At least one special character (@$!%*?&)</li>
+                                    </ul>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please enter a valid password meeting all requirements.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Passwords do not match.
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </div>
+                        </form>
+                        <div class="text-center mt-3">
+                            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center">
+            <span class="text-muted">© 2025 Home Price Prediction</span>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirm_password');
+            const togglePassword = document.getElementById('togglePassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
+            // Password requirements check
+            function checkPasswordRequirements(value) {
+                document.getElementById('length').style.color = value.length >= 8 ? 'green' : '';
+                document.getElementById('uppercase').style.color = /[A-Z]/.test(value) ? 'green' : '';
+                document.getElementById('lowercase').style.color = /[a-z]/.test(value) ? 'green' : '';
+                document.getElementById('number').style.color = /\d/.test(value) ? 'green' : '';
+                document.getElementById('special').style.color = /[@$!%*?&]/.test(value) ? 'green' : '';
+            }
+
+            // Password input event listener
+            password.addEventListener('input', function() {
+                checkPasswordRequirements(this.value);
+                if (confirmPassword.value) {
+                    confirmPassword.setCustomValidity(
+                        password.value !== confirmPassword.value ? 'Passwords do not match.' : ''
+                    );
+                }
+            });
+
+            // Confirm password input event listener
+            confirmPassword.addEventListener('input', function() {
+                this.setCustomValidity(
+                    password.value !== this.value ? 'Passwords do not match.' : ''
+                );
+            });
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPassword.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            // Form validation
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity() || password.value !== confirmPassword.value) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+
+            // Initial password requirements check
+            checkPasswordRequirements(password.value);
+        });
+    </script>
+</body>
+</html>
